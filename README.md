@@ -1,6 +1,6 @@
 # Word Wars
 
-A multiplayer team word game for 2–10 players, built for Sites.
+A multiplayer team word game for 1–10 players, built for Sites.
 
 ## Run locally
 
@@ -13,6 +13,10 @@ Requires Node.js 22.13 or later.
 4. Run `npm start` and open the printed local URL.
 
 The Sites project identity is retained in `.openai/hosting.json`. Publishing needs an authorized source repository upload, then version saving and deployment through Sites.
+
+## Solo play
+
+A host can start alone on either team. Capture 25 tiles within 10 rounds to win. Solo games end when round 10 finishes if the target is unmet; they do not enter sudden death. Friends can join a lobby individually with the room code and choose their team.
 
 ## Implemented
 
@@ -28,4 +32,6 @@ TypeScript check and production build passed. `node tests/game.mjs` verifies pla
 
 ## Publication status
 
-Built and tested locally. Publication is not complete: the environment rejects the Sites source helper’s credential-input step, even after permissions were granted. No live deployment URL has been verified.
+Source is maintained at https://github.com/FemmeCodedx/Word-Wars. TypeScript checks, production build, and game-rule tests pass. Hosting still needs to be configured before remote players can connect.
+
+The included Azure workflow is an unconfigured template (its app name is still `your-app-name`). This application uses Cloudflare Workers and a D1 database; static GitHub Pages cannot run its shared rooms. Use Sites publishing, or configure a compatible Cloudflare deployment with the DB binding and included migration.

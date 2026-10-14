@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+const origin=process.env.WORD_WARS_ORIGIN||'http://127.0.0.1:8787';
+const post=async x=>{const res=await fetch(origin+'/api/room',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(x)});return {ok:res.ok,...await res.json()}};
+const a=await post({action:'create',name:'QA Host'});assert.ok(a.ok,a.error);const code=a.room.code;
+const b=await post({action:'join',name:'QA Friend',code});assert.ok(b.ok,b.error);assert.equal(b.room.players.length,2);
+const started=await post({action:'start',code,token:a.token});assert.ok(started.ok,started.error);assert.equal(started.room.status,'playing');
+const first=await Promise.all([post({action:'answer',code,token:a.token,board:0,index:0,answer:'Silent Night'}),post({action:'answer',code,token:b.token,board:0,index:0,answer:'Silent Night'})]);assert.equal(first.filter(x=>x.ok).length,1,'Exactly one simultaneous answer wins');
+const read=async token=>{const res=await fetch(origin+'/api/room?code='+code+'&token='+token);assert.ok(res.ok);return res.json()};const [ra,rb]=await Promise.all([read(a.token),read(b.token)]);assert.deepEqual(ra.tiles,rb.tiles);assert.equal(ra.tiles.filter(t=>t>=0).length,1);assert.equal(ra.boards[0].index,1);assert.equal(ra.solved[0]+ra.solved[1],1);
+const unauthorized=await fetch(origin+'/api/room?code='+code+'&token=wrong');assert.equal(unauthorized.status,400);
+const slots=await post({action:'create',name:'QA Capacity'});for(let i=1;i<10;i++){const joined=await post({action:'join',code:slots.room.code,name:'Guest '+i});assert.ok(joined.ok,joined.error)}const full=await post({action:'join',code:slots.room.code,name:'Eleventh'});assert.ok(!full.ok);assert.match(full.error,/full/);
+console.log('Passed actual server: independent sessions, room joining, host start, concurrent answers awarded once, identical shared maps, private session tokens, and 10-player capacity.');
