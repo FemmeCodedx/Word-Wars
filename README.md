@@ -30,8 +30,12 @@ Rooms expire after 24 hours. An unanswered sudden-death puzzle restarts. If all 
 
 TypeScript check and production build passed. `node tests/game.mjs` verifies player allocation, streaks, territory, hints, and endings. With the local server running, `node tests/multiplayer.mjs` verifies independent sessions, exactly-once concurrent answer awards, synchronized territory, session checks, and capacity.
 
-## Publication status
+## Live game
 
-Source is maintained at https://github.com/FemmeCodedx/Word-Wars. TypeScript checks, production build, and game-rule tests pass. Hosting still needs to be configured before remote players can connect.
+Play at https://word-wars.niastewart24.workers.dev/
 
-The included Azure workflow is an unconfigured template (its app name is still `your-app-name`). This application uses Cloudflare Workers and a D1 database; static GitHub Pages cannot run its shared rooms. Use Sites publishing, or configure a compatible Cloudflare deployment with the DB binding and included migration.
+Cloudflare Workers builds and deploys the `main` branch. The production D1 database `word-wars-db` is bound as `DB`; its room table has been initialized using the included schema. The Worker name and database binding are configured in `vite.config.ts`.
+
+Verified on the public URL: independent multiplayer sessions, room-code joining, exactly-once concurrent answer awards, synchronized territory, 10-player capacity, and solo play on either team.
+
+The included Azure workflow is an unused template. The live game is hosted on Cloudflare.
