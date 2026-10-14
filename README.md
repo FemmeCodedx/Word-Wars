@@ -16,13 +16,13 @@ The Sites project identity is retained in `.openai/hosting.json`. Publishing nee
 
 ## Solo play
 
-A host can start alone on either team. Capture 25 tiles within 10 rounds to win. Solo games end when round 10 finishes if the target is unmet; they do not enter sudden death. Friends can join a lobby individually with the room code and choose their team.
+A host can start alone on either team. Solve 12 puzzles within 10 rounds to win. Solo games end when round 10 finishes if the target is unmet; they do not enter sudden death. Friends can join a lobby individually with the room code and choose their team.
 
 ## Implemented
 
-Room-code lobbies; name-only entry; chosen teams; host-selected themes; 1-v-1, 2-v-1, and 2-v-2 boards; simultaneous puzzles; 120-second rounds; fresh 30/60-second hints; automatic territory awards; shared third-win capture streaks; 7×7 map; 25-tile victory; 10-round limit; 60-second sudden death with a hint at 15 seconds; rematches; device refresh recovery.
+Room-code lobbies; name-only entry; chosen teams; host-selected themes; 1-v-1, 2-v-1, and 2-v-2 boards; simultaneous puzzles; 120-second rounds; first hint on request after 30 seconds and automatic second hint at 60 seconds; automatic territory awards; shared third-win capture streaks; 49 named-property board; 25-tile victory; 10-round limit; 60-second sudden death with a hint at 15 seconds; rematches; device refresh recovery.
 
-Launch categories: Christmas songs, 2000s pop, Financial literacy, Animals. Add puzzle entries in `lib/puzzles.ts`; format is answer|hint one|hint two. Puzzle banks cycle during long sessions.
+Categories: Christmas songs, 2000s pop, Financial literacy, Animals, NBA teams, MLB teams, NFL teams, NHL teams, US states, 90s R&B, 90s Hip Hop, and 90s Pop. Add categories in `lib/categories.ts` and puzzle entries in `lib/puzzles.ts`; format is answer|hint one|hint two. Puzzle banks cycle during long sessions.
 
 Rooms expire after 24 hours. An unanswered sudden-death puzzle restarts. If all tiles are owned, an ordinary win captures enemy territory. No sign-in is required within the game. Public Sites access must be enabled for guests to reach it.
 
@@ -39,3 +39,11 @@ Cloudflare Workers builds and deploys the `main` branch. The production D1 datab
 Verified on the public URL: independent multiplayer sessions, room-code joining, exactly-once concurrent answer awards, synchronized territory, 10-player capacity, and solo play on either team.
 
 The included Azure workflow is an unused template. The live game is hosted on Cloudflare.
+
+## Named properties and hints
+
+The property board has 48 perimeter properties and the central Crown Plaza. All 49 count toward the multiplayer 25-property majority. Ownership lists and the capture feed identify claimed and captured properties by name. Solo victory depends on 12 solved puzzles, not territory count.
+
+Each player can request the first hint once per puzzle, starting at 30 seconds. Only that player sees the requested hint. The second hint remains automatic at 60 seconds. A new puzzle resets hint requests. Sudden death still has one automatic hint at 15 seconds.
+
+Sports team names are checked against the official NBA, MLB, NFL, and NHL team directories (October 2026); music entries use titles and artist metadata without lyrics.
